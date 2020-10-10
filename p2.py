@@ -5,5 +5,5 @@ from pynput import mouse, keyboard
 
 
 for i in range(100):
-    windll.user32.mouse_event(0x0001, -5, -5, 0, 0)
+    windll.user32.mouse_event(0x0001, 2, -5, 0, 0)
     sleep(0.01)
