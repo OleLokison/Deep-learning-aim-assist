@@ -1,5 +1,6 @@
 import pyautogui
 from time import time, sleep
+from pynput import keyboard
 
 FileRaw = r"D:\K14\Dataset\Raw"
 
@@ -19,7 +20,10 @@ def screenshot(window_title=None, factor=None):
         im = pyautogui.screenshot()
         return im
 
-sleep(6)
-st = time()
-im = screenshot('Rainbow six')
-print(time()-st)
+def key_press(key):
+    print(1)
+
+with keyboard(key_press=key_press) as MouseListener:
+    MouseListener.start()
+
+aleep(1)
