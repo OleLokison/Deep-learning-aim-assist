@@ -1,6 +1,8 @@
 import pyautogui
 from time import time, sleep
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
+from threading import Thread
+from pynput import mouse, keyboard
 
 def screenshot(window_title=None):
     if window_title:
@@ -17,7 +19,7 @@ def screenshot(window_title=None):
     else:
         im = pyautogui.screenshot()
         return im
-
+Th = keyboard()
 sleep(0)
 st = time()
 im = screenshot('Rainbow six')
