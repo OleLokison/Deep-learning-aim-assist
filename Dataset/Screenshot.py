@@ -11,14 +11,25 @@ Hotkey, StopKey=False, True
 FileRaw = r"D:\K14\Dataset\Raw\\"
 count=0
 st=None
+"""
+def enum_window_titles():
+    #returns all open window class names
+    def callback(handle, data):
+        titles.append(win32gui.GetWindowText(handle))
 
-for (dirpath, dirnames, filenames) in walk(FileRaw):
-    for filename in filenames:
-        if strftime("%Y-%m-%d", gmtime()) in filename:
-            if int(filename[len(filename)-5])+1 > count:
-                count = int(filename[len(filename)-5])+1
-                print("count changed to:"+str(count))
-    break
+    titles = []
+    win32gui.EnumWindows(callback, None)
+    return titles
+"""
+def FilenameFlow():
+    #seraches in directory for latest count and adapts the count variable
+    for (dirpath, dirnames, filenames) in walk(FileRaw):
+        for filename in filenames:
+            if strftime("%Y-%m-%d", gmtime()) in filename:
+                if int(filename[len(filename)-5])+1 > count:
+                    count = int(filename[len(filename)-5])+1
+                    print("count changed to:"+str(count))
+        break
 
 def screenshot(window_title=None, factorx=0, factory=0):
     if window_title:
@@ -52,22 +63,26 @@ def on_press(key):
     except AttributeError:
         None
 
+def Photographer():
+    #gets keypress signal(Hotkey), generates and saves Screenshot
+    while StopKey:
+        if Hotkey:
+            image = screenshot("Rainbow Six")
+            print(time()-st)
+            image.save(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
+            print(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
+            Hotkey=False
+            count+=1
+
+FilenameFlow()
 KeyboardListener = keyboard.Listener(on_press=on_press)
 KeyboardListener.start()
-
-while StopKey:
-    if Hotkey:
-        image = screenshot("Rainbow Six")
-        print(time()-st)
-        image.save(FileRaw+
-            strftime("%Y-%m-%d", gmtime())+
-            "-"+
-            str(count)+
-            ".png")
-        print(FileRaw+
-            strftime("%Y-%m-%d", gmtime())+
-            "-"+
-            str(count)+
-            ".png")
-        Hotkey=False
-        count+=1
+Photographer()
