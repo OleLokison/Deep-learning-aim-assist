@@ -20,7 +20,7 @@ for (dirpath, dirnames, filenames) in walk(FileRaw):
                 print("count changed to:"+str(count))
     break
 
-def screenshot(window_title=None, factor=None):
+def screenshot(window_title=None, factorx=0, factory=0):
     if window_title:
         hwnd = FindWindow(None, window_title)
         if hwnd:
@@ -28,6 +28,9 @@ def screenshot(window_title=None, factor=None):
             x, y, x1, y1 = GetClientRect(hwnd)
             x, y = ClientToScreen(hwnd, (x, y))
             x1, y1 = ClientToScreen(hwnd, (x1 - x, y1 - y))
+            #x,y,x1,y1 position und Grösse
+            x += int((x1*factorx/2)); x1 -=int((x1*factorx))
+            y += int((y1*factory/2)); y1 -= int((y1*factory))
             im = pyautogui.screenshot(region=(x, y, x1, y1))
             return im
         else:
