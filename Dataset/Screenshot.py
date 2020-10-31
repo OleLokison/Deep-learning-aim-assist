@@ -12,14 +12,25 @@ FileRaw = r"D:\K14\Dataset\Raw\\"
 images=[]
 count=0
 st=None
+"""
+def enum_window_titles():
+    #returns all open window class names
+    def callback(handle, data):
+        titles.append(win32gui.GetWindowText(handle))
 
-for (dirpath, dirnames, filenames) in walk(FileRaw):
-    for filename in filenames:
-        if strftime("%Y-%m-%d", gmtime()) in filename:
-            if int(filename[len(filename)-5])+1 > count:
-                count = int(filename[len(filename)-5])+1
-                print("count changed to:"+str(count))
-    break
+    titles = []
+    win32gui.EnumWindows(callback, None)
+    return titles
+"""
+def FilenameFlow():
+    #seraches in directory for latest count and adapts the count variable
+    for (dirpath, dirnames, filenames) in walk(FileRaw):
+        for filename in filenames:
+            if strftime("%Y-%m-%d", gmtime()) in filename:
+                if int(filename[len(filename)-5])+1 > count:
+                    count = int(filename[len(filename)-5])+1
+                    print("count changed to:"+str(count))
+        break
 
 def screenshot(window_title=None, factorx=0, factory=0):
     if window_title:
@@ -75,8 +86,29 @@ class myThread(Thread):
 				images.pop(0)
 
 
+def Photographer():
+    #gets keypress signal(Hotkey), generates and saves Screenshot
+    while StopKey:
+        if Hotkey:
+            image = screenshot("Rainbow Six")
+            print(time()-st)
+            image.save(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
+            print(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
+            Hotkey=False
+            count+=1
+
+FilenameFlow()
 KeyboardListener = keyboard.Listener(on_press=on_press)
 KeyboardListener.start()
+<<<<<<< HEAD
 
 #saveimages = myThread()
 #saveimages.start()
@@ -100,3 +132,6 @@ while StopKey:
 		Hotkey=False
 		count+=1
 	sleep(0.0005)
+=======
+Photographer()
+>>>>>>> 81abd8ef0a7977c18a7f21237fa536c98cdde24a
