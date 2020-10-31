@@ -9,6 +9,7 @@ from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScr
 from os import walk
 Hotkey, StopKey=False, True
 FileRaw = r"D:\K14\Dataset\Raw\\"
+images=[]
 count=0
 st=None
 
@@ -29,6 +30,7 @@ def screenshot(window_title=None, factorx=0, factory=0):
             x, y = ClientToScreen(hwnd, (x, y))
             x1, y1 = ClientToScreen(hwnd, (x1 - x, y1 - y))
             #x,y,x1,y1 position und Grösse
+            print(x1*factorx, x1*factory)
             x += int((x1*factorx/2)); x1 -=int((x1*factorx))
             y += int((y1*factory/2)); y1 -= int((y1*factory))
             im = pyautogui.screenshot(region=(x, y, x1, y1))
@@ -51,23 +53,50 @@ def on_press(key):
             st = time()
     except AttributeError:
         None
+class myThread(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+		None
+	def run(self):
+		print(4)
+		global StopKey, images
+		while StopKey:
+			if len(images)>0:
+				images[0].save(FileRaw+
+					strftime("%Y-%m-%d", gmtime())+
+					"-"+
+					str(count)+
+					".png")
+				print(FileRaw+
+					strftime("%Y-%m-%d", gmtime())+
+					"-"+
+					str(count)+
+					".png")
+				images.pop(0)
+
 
 KeyboardListener = keyboard.Listener(on_press=on_press)
 KeyboardListener.start()
 
+#saveimages = myThread()
+#saveimages.start()
 while StopKey:
-    if Hotkey:
-        image = screenshot("Rainbow Six")
-        print(time()-st)
-        image.save(FileRaw+
-            strftime("%Y-%m-%d", gmtime())+
-            "-"+
-            str(count)+
-            ".png")
-        print(FileRaw+
-            strftime("%Y-%m-%d", gmtime())+
-            "-"+
-            str(count)+
-            ".png")
-        Hotkey=False
-        count+=1
+	if Hotkey:
+		images
+
+
+		.append(screenshot("Rainbow Six"))
+		print(time()-st)
+		images[0].save(FileRaw+
+			strftime("%Y-%m-%d", gmtime())+
+			"-"+
+			str(count)+
+			".png")
+		print(FileRaw+
+			strftime("%Y-%m-%d", gmtime())+
+			"-"+
+			str(count)+
+			".png")
+		Hotkey=False
+		count+=1
+	sleep(0.0005)
