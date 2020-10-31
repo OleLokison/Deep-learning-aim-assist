@@ -8,8 +8,8 @@ from pynput import mouse, keyboard
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
 from os import walk
 Hotkey, StopKey=False, True
-FileRawH = r"D:\K14\Dataset\Raw\\"
-FileRawM = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+FileRaw = r"D:\K14\Dataset\Raw\\"
+#FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
 images=[]
 count=0
 st=None
@@ -24,14 +24,27 @@ def enum_window_titles():
     return titles
 """
 def FilenameFlow():
-    #seraches in directory for latest count and adapts the count variable
-    for (dirpath, dirnames, filenames) in walk(FileRawM):
-        for filename in filenames:
-            if strftime("%Y-%m-%d", gmtime()) in filename:
-                if int(filename[len(filename)-5])+1 > count:
-                    count = int(filename[len(filename)-5])+1
-                    print("count changed to:"+str(count))
-        break
+	#seraches in directory for latest count and adapts the count variable
+	global count, FileRaw
+	for (dirpath, dirnames, filenames) in walk(FileRaw):
+		for filename in filenames:
+			if strftime("%Y-%m-%d", gmtime()) in filename:
+				if len(filename)==16:
+					if int(filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("16--------"+filename)
+				elif len(filename)==17:
+					if int(filename[len(filename)-6]+filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-6]+filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("17--------"+filename)
+				elif len(filename)==18:
+					if int(filename[len(filename)-7]+filename[len(filename)-6]+filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-7]+filename[len(filename)-6]+filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("18--------"+filename)
+		break
 
 def screenshot(window_title=None, factorx=0, factory=0):
     if window_title:
@@ -60,52 +73,68 @@ def on_press(key):
         if key.char=="5":
             KeyboardListener.stop()
             StopKey=False
-        if key.char=="q":
+        if key.char=="q" or key.char=="Q":
             Hotkey=True
             st = time()
     except AttributeError:
         None
+
 class myThread(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		None
 	def run(self):
 		print(4)
-		global StopKey, images, FileRawM, FileRawH
+		global StopKey, images, FileRaw, count
 		while StopKey:
 			if len(images)>0:
-				images[0].save(FileRawM+
+				images[0].save(FileRaw+
 					strftime("%Y-%m-%d", gmtime())+
 					"-"+
 					str(count)+
 					".png")
-				print(FileRawM+
+				print(FileRaw+
 					strftime("%Y-%m-%d", gmtime())+
 					"-"+
 					str(count)+
 					".png")
 				images.pop(0)
+				count+=1
+			sleep(0.05)
 
 
 def Photographer():
     #gets keypress signal(Hotkey), generates and saves Screenshot
-    global StopKey, Hotkey, images, count, FileRawM, FileRawH
+    global StopKey, Hotkey, images, count, FileRaw, FileRaw
     while StopKey:
         if Hotkey:
-            image = screenshot("Rainbow Six")
+            images.append(screenshot("Rainbow Six"))
+            """
+            image.save(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
+            print(FileRaw+
+                strftime("%Y-%m-%d", gmtime())+
+                "-"+
+                str(count)+
+                ".png")
             print(time()-st)
-            image.save(FileRawM+
+            image.save(FileRaw+
                 strftime("%Y-%m-%d", gmtime())+
                 "-"+
                 str(count)+
                 ".png")
-            print(FileRawM+
+            print(FileRaw+
                 strftime("%Y-%m-%d", gmtime())+
                 "-"+
                 str(count)+
                 ".png")
+            """
             Hotkey=False
-            count+=1
+        sleep(0.005)
+
 
 FilenameFlow()
 
@@ -114,6 +143,7 @@ KeyboardListener.start()
 
 saveimages = myThread()
 saveimages.start()
+
 
 Photographer()
 """"
@@ -127,12 +157,12 @@ while StopKey:
 
 		.append(screenshot("Rainbow Six"))
 		print(time()-st)
-		images[0].save(FileRawM+
+		images[0].save(FileRaw+
 			strftime("%Y-%m-%d", gmtime())+
 			"-"+
 			str(count)+
 			".png")
-		print(FileRawM+
+		print(FileRaw+
 			strftime("%Y-%m-%d", gmtime())+
 			"-"+
 			str(count)+
