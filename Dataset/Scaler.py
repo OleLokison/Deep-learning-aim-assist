@@ -11,6 +11,31 @@ from os import walk
 from tkinter import *
 
 FilePath = r"D:\K14\Dataset\Prototyp\\"
+FilePathScaled = r"D:\K14\Dataset\572x572\\"
+count=0
+
+def FilenameFlow():
+	#seraches in directory for latest count and adapts the count variable
+	global count, FilePath
+	for (dirpath, dirnames, filenames) in walk(FilePath):
+		for filename in filenames:
+			if strftime("%Y-%m-%d", gmtime()) in filename:
+				if len(filename)==16:
+					if int(filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("16--------"+filename)
+				elif len(filename)==17:
+					if int(filename[len(filename)-6]+filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-6]+filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("17--------"+filename)
+				elif len(filename)==18:
+					if int(filename[len(filename)-7]+filename[len(filename)-6]+filename[len(filename)-5])+1 > count:
+						count = int(filename[len(filename)-7]+filename[len(filename)-6]+filename[len(filename)-5])+1
+						print("count changed to:"+str(count))
+						print("18--------"+filename)
+		break
 
 def FileNameFinder():
 	#seraches in directory for latest count and adapts the count variable
@@ -45,11 +70,22 @@ class Window(Frame):
         img.image = render
         img.pack()
 
+"""
+FilenameFlow()
 AllNames=FileNameFinder()
-FileName = FilePath+AllNames[0]
+for name in AllNames:
+	Cropper(FilePath+name, 572, 572).save(FilePathScaled+
+					strftime("%Y-%m-%d", gmtime())+
+					"-"+
+					str(count)+
+					".png")
+	count+=1
+"""
 
+"""
 root = Tk()
 app = Window(root, Cropper(FileName, 572, 572))
 root.wm_title("Tkinter window")
 root.geometry("2560x1440")
 root.mainloop()
+"""
