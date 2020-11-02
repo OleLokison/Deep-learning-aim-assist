@@ -8,20 +8,23 @@ from pynput import mouse, keyboard
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
 from os import walk
 Hotkey, StopKey=False, True
-FileRaw = r"D:\K14\Dataset\Raw\\"
-#FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+#FileRaw = r"D:\K14\Dataset\Raw\\"
+FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+#WindowClassName = "Rainbow six siege"
+WindowClassName = '(3) Rainbow Six Siege - Test 2560x1440 - YouTube - Google Chrome'
 images=[]
 count=0
 st=None
 """
+from win32gui import GetWindowText, EnumWindows
 def enum_window_titles():
-    #returns all open window class names
-    def callback(handle, data):
-        titles.append(win32gui.GetWindowText(handle))
-
-    titles = []
-    win32gui.EnumWindows(callback, None)
-    return titles
+	#returns all open window class names
+	def callback(handle, data):
+		titles.append(GetWindowText(handle))
+	titles = []
+	EnumWindows(callback, None)
+	return titles
+print(enum_window_titles())
 """
 def FilenameFlow():
 	#seraches in directory for latest count and adapts the count variable
@@ -105,10 +108,10 @@ class myThread(Thread):
 
 def Photographer():
     #gets keypress signal(Hotkey), generates and saves Screenshot
-    global StopKey, Hotkey, images, count, FileRaw, FileRaw
+    global StopKey, Hotkey, images, count, FileRaw, FileRaw, WindowClassName
     while StopKey:
         if Hotkey:
-            images.append(screenshot("Rainbow Six"))
+            images.append(screenshot(WindowClassName))
             """
             image.save(FileRaw+
                 strftime("%Y-%m-%d", gmtime())+
