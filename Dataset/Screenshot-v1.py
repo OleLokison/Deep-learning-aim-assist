@@ -7,11 +7,12 @@ from time import time, sleep, gmtime, strftime
 from pynput import mouse, keyboard
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
 from os import walk
-Hotkey, StopKey, TriggerSupportKey=False, True, False
+Hotkey, StopKey, TriggerKey=False, True, False
 #FileRaw = r"D:\K14\Dataset\Raw\\"
-FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+FileRaw = r"D:\K14\Dataset\Prototyp\\"
+#FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
 #WindowClassName = "Rainbow six siege"
-WindowClassName = '(3) Rainbow Six Siege - Test 2560x1440 - YouTube - Google Chrome'
+WindowClassName = 'Rainbow Six'
 images=[]
 count=0
 st=None
@@ -69,70 +70,50 @@ def screenshot(window_title=None, factorx=0, factory=0):
         im = pyautogui.screenshot()
         return im
 
+from threading import Thread
+from time import time, sleep
+from ctypes import Structure, windll, c_uint, sizeof, byref
+from pynput import mouse, keyboard
+Hotkey, TriggerKey, TriggerSupportKey, TriggerSupportShutDown=False, True, False, True
+
+def TriggerSupport():
+    global TriggerKey, TriggerSupportKey, TriggerSupportShutDown
+    while TriggerSupportShutDown:
+        if TriggerSupportKey:
+            TriggerKey=False
+            for i in range(2):
+                print("Woooooooow")
+                sleep(0.1)
+                windll.user32.mouse_event(0x0002, 0, 0, 0, 0)
+                sleep(0.01)
+                windll.user32.mouse_event(0x0004, 0, 0, 0, 0)
+            TriggerKey=True
+            TriggerSupportKey=False
+        sleep(0.005)
+
 def on_press(key):
-    global Hotkey, StopKey, st
+    global Hotkey
     print(str(key))
     try:
         if key.char=="5":
             KeyboardListener.stop()
-            StopKey=False
-        if key.char=="q" or key.char=="Q":
-            Hotkey=True
-            st = time()
+        if key.char=="6":
+            Hotkey=not(Hotkey)
     except AttributeError:
         None
 
 def on_click(a1,a2,a3,a4):
-	print("click")
-	global Hotkey, StopKey
-	if StopKey and a4:
-		Hotkey=True
+    print("click")
+    global Hotkey, TriggerKey, TriggerSupportKey
+    if Hotkey and TriggerKey and a4 and str(a3)=="Button.left":
+        TriggerSupportKey=True
 
-class myThread(Thread):
-	def __init__(self):
-		Thread.__init__(self)
-		None
-	def run(self):
-		print(4)
-		global StopKey, images, FileRaw, count
-		while StopKey:
-			if len(images)>0:
-				images[0].save(FileRaw+
-					strftime("%Y-%m-%d", gmtime())+
-					"-"+
-					str(count)+
-					".png")
-				print(FileRaw+
-					strftime("%Y-%m-%d", gmtime())+
-					"-"+
-					str(count)+
-					".png")
-				images.pop(0)
-				count+=1
-			sleep(0.05)
-
-
-def Photographer():
-	#gets keypress signal(Hotkey), generates and saves Screenshot
-	global StopKey, Hotkey, images, WindowClassName
-	while StopKey:
-		if Hotkey:
-			im = screenshot(WindowClassName)
-			if im != None:
-				images.append(im)
-			Hotkey=False
-		sleep(0.005)
-
-
-FilenameFlow()
-
-KeyboardListener = keyboard.Listener(on_press=on_press)
-KeyboardListener.start()
+TriggerSupportThread = Thread(target=TriggerSupport, daemon=True)
+TriggerSupportThread.start()
 
 MouseListener = mouse.Listener(on_click=on_click)
 MouseListener.start()
 
-saveimages = myThread()
-saveimages.start()
+with keyboard.Listener(on_press=on_press) as KeyboardListener:
+    KeyboardListener.join()
 
-Photographer()
