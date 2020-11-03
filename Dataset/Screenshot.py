@@ -8,10 +8,10 @@ from pynput import mouse, keyboard
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
 from os import walk
 Hotkey, StopKey=False, True
-#FileRaw = r"D:\K14\Dataset\Raw\\"
-FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+FileRaw = r"D:\K14\Dataset\Raw\\"
+#FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
 #WindowClassName = "Rainbow six siege"
-WindowClassName = '(3) Rainbow Six Siege - Test 2560x1440 - YouTube - Google Chrome'
+WindowClassName = 'Rainbow Six'
 images=[]
 count=0
 st=None
