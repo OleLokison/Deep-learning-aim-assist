@@ -10,10 +10,10 @@ from os import walk
 import win32api
 
 Hotkey, StopKey = False, True
-FileRaw = r"D:\K14\Dataset\ProtRaw\\"
+FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
 # FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
-# WindowClassName = 'C:\\Users\\8holz\\Dokumente\\GitHub\\K14\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
-WindowClassName = 'Rainbow Six'
+WindowClassName = 'C:\\Users\\8holz\\Documents\\GitHub\\K14 Githubg\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
+# WindowClassName = 'Rainbow Six'
 ProvisionallyImages = []
 FinalImages = []
 count = 0
@@ -155,13 +155,16 @@ def Photographer():
 	while StopKey:
 		MouseState = win32api.GetKeyState(0x01)
 		if MouseState == -127 or MouseState == -128:  # Button state changed
-			FinalImages+=ProvisionallyImages
-			ProvisionallyImages.clear()
-			state_left = MouseState
-			print(str(repr(int(round(time() * 10)))[-1]))
+			moment = time() #wird jedesmal neu gemacht, zusammenhängende nicht neu machen
+			print(time() - moment)
+			if time() - moment > 0.2:
+				FinalImages+=ProvisionallyImages
+				ProvisionallyImages.clear()
+				state_left = MouseState
+				print(str(repr(int(round(time() * 10)))[-1]))
 		sleep(0.001)
 
-sleep(10)
+
 FilenameFlow()
 
 KeyboardListener = keyboard.Listener(on_press=on_press)

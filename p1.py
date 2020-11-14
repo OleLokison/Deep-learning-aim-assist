@@ -8,7 +8,9 @@ from pynput import mouse, keyboard
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
 from os import walk
 import win32api
-
+moment = False
+beginstate = win32api.GetKeyState(0x01)
+timepoint = None
 Hotkey, StopKey = False, True
 FileRaw = r"D:\K14\Dataset\Raw\\"
 # FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
@@ -18,29 +20,36 @@ images = []
 count = 0
 st = None
 
-def MouseClickCalibrate():
-	global state_right, state_left
-	Lock = True
-	while Lock:
-		state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
-		state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
-		if state_right == 1 or state_right == 0 and state_left == 0 or state_left == 0:
-			Lock = False
+def on_press(key):
+	global Hotkey, StopKey, st
+	print(str(key))
+	try:
+		if key.char == "5":
+			KeyboardListener.stop()
+			StopKey = False
+		if key.char == "q" or key.char == "Q":
+			Hotkey = True
+			st = time()
+	except AttributeError:
+		None
 
 
 def Photographer():
 	print("Photographer")
 	# if Mouse is clicked provisional to final
-	global StopKey, state_right, state_left
+	global StopKey
+	beginstate = win32api.GetKeyState(0x01)
+	print(beginstate)
+	moment = 1
 	while StopKey:
 		MouseState = win32api.GetKeyState(0x01)
 		if MouseState == -127 or MouseState == -128:  # Button state changed
-#			FinalImages+=ProvisionallyImages
-			state_left = MouseState
-			print("Mouse changed")
+			moment =time()
 		else:
-			print(1)
-while True:
-	MouseState = win32api.GetKeyState(0x01)
-	print(MouseState)
-	sleep(0.001)
+			print(time()-moment)5
+		sleep(0.001)
+
+KeyboardListener = keyboard.Listener(on_press=on_press)
+KeyboardListener.start()
+
+Photographer()
