@@ -10,9 +10,9 @@ from os import walk
 import win32api
 
 Hotkey, StopKey = False, True
-FileRaw = r"D:\K14\Dataset\Raw\\"
+FileRaw = r"D:\K14\Dataset\ProtRaw\\"
 # FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
-# WindowClassName = "Rainbow six siege"
+# WindowClassName = 'C:\\Users\\8holz\\Dokumente\\GitHub\\K14\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
 WindowClassName = 'Rainbow Six'
 ProvisionallyImages = []
 FinalImages = []
@@ -66,7 +66,7 @@ def MouseClickCalibrate():
 		state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
 		if state_right == 1 or state_right == 0 and state_left == 0 or state_left == 0:
 			Lock = False
-"""
+
 def screenshot(window_title=None, factorx=0, factory=0):
 	if window_title:
 		hwnd = FindWindow(None, window_title)
@@ -91,7 +91,7 @@ def screenshot(window_title=None, factorx=0, factory=0):
 """
 def screenshot(window_title=None, factorx=0, factory=0):
 	print("")
-
+"""
 
 def on_press(key):
 	global Hotkey, StopKey, st
@@ -128,7 +128,7 @@ class myThread1(Thread):
 				      ".png")
 				FinalImages.pop(0)
 				count += 1
-			sleep(0.05)
+			sleep(0.1)
 
 
 class myThread2(Thread):
@@ -142,27 +142,26 @@ class myThread2(Thread):
 			tenthsecond = int(repr(int(round(time() * 10)))[-1])
 			if tenthsecond == 5 or tenthsecond == 0:
 				ProvisionallyImages.append(screenshot(WindowClassName))
+				print(len(ProvisionallyImages))
 			if len(ProvisionallyImages) > 3:
-				ProvisionallyImages.pop(ProvisionallyImages[len(ProvisionallyImages)-1])
+				ProvisionallyImages.pop(3)
+			sleep(0.001)
 
 
 def Photographer():
 	print("Photographer")
-	# if Mouse is clicked Boolean = True
-	global StopKey, state_right, state_left, LeftMouseDown
-	Lock = True
-	while Lock:
-		state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
-		state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
-		if state_right == 1 or state_right == 0 and state_left == 0 or state_left == 0:
-			Lock = False
+	# if Mouse is clicked provisional to final
+	global StopKey, state_right, state_left, ProvisionallyImages, FinalImages
 	while StopKey:
 		MouseState = win32api.GetKeyState(0x01)
-		if MouseState != state_left:  # Button state changed
+		if MouseState == -127 or MouseState == -128:  # Button state changed
 			FinalImages+=ProvisionallyImages
-			print("Mouse changed")
+			ProvisionallyImages.clear()
+			state_left = MouseState
+			print(str(repr(int(round(time() * 10)))[-1]))
+		sleep(0.001)
 
-
+sleep(10)
 FilenameFlow()
 
 KeyboardListener = keyboard.Listener(on_press=on_press)

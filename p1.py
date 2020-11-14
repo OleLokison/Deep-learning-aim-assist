@@ -30,12 +30,17 @@ def MouseClickCalibrate():
 
 def Photographer():
 	print("Photographer")
-	# gets keypress signal(Hotkey), generates and appends screenshot to global list
-	global StopKey, state_right, state_left, LeftMouseDown
+	# if Mouse is clicked provisional to final
+	global StopKey, state_right, state_left
 	while StopKey:
 		MouseState = win32api.GetKeyState(0x01)
-		if MouseState != state_left:  # Button state changed
-			LeftMouseDown = True
+		if MouseState == -127 or MouseState == -128:  # Button state changed
+#			FinalImages+=ProvisionallyImages
+			state_left = MouseState
 			print("Mouse changed")
-
-Photographer()
+		else:
+			print(1)
+while True:
+	MouseState = win32api.GetKeyState(0x01)
+	print(MouseState)
+	sleep(0.001)
