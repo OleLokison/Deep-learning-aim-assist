@@ -9,6 +9,17 @@ from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScr
 from os import walk
 import win32api
 
+Hotkey, StopKey = False, True
+FileRaw = r"D:\K14\Dataset\Raw\\"
+# FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+# WindowClassName = "Rainbow six siege"
+WindowClassName = 'Rainbow Six'
+ProvisionallyImages = []
+FinalImages = []
+count = 0
+st = None
+
+
 """
 from win32gui import GetWindowText, EnumWindows
 def enum_window_titles():
@@ -20,18 +31,6 @@ def enum_window_titles():
 	return titles
 print(enum_window_titles())
 """
-
-Hotkey, StopKey = False, True
-FileRaw = r"D:\K14\Dataset\Raw\\"
-# FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
-# WindowClassName = "Rainbow six siege"
-WindowClassName = 'Rainbow Six'
-images = []
-count = 0
-st = None
-
-state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
-state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
 
 
 def FilenameFlow():
@@ -59,6 +58,14 @@ def FilenameFlow():
 						print("18--------" + filename)
 		break
 
+def MouseClickCalibrate():
+	global state_right, state_left
+	Lock = True
+	while Lock:
+		state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
+		state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
+		if state_right == 1 or state_right == 0 and state_left == 0 or state_left == 0:
+			Lock = False
 """
 def screenshot(window_title=None, factorx=0, factory=0):
 	if window_title:
@@ -83,7 +90,7 @@ def screenshot(window_title=None, factorx=0, factory=0):
 		return im
 """
 def screenshot(window_title=None, factorx=0, factory=0):
-	print("SCREENSHOT IS MADE")
+	print("")
 
 
 def on_press(key):
@@ -99,19 +106,17 @@ def on_press(key):
 	except AttributeError:
 		None
 
-
-class myThread(Thread):
+class myThread1(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		None
 
 	def run(self):
 		# saves the images in the global list
-		print(4)
-		global StopKey, images, FileRaw, count
+		global StopKey, FinalImages, FileRaw, count
 		while StopKey:
-			if len(images) > 0:
-				images[0].save(FileRaw +
+			if len(FinalImages) > 0:
+				FinalImages[0].save(FileRaw +
 				               strftime("%Y-%m-%d", gmtime()) +
 				               "-" +
 				               str(count) +
@@ -121,50 +126,52 @@ class myThread(Thread):
 				      "-" +
 				      str(count) +
 				      ".png")
-				images.pop(0)
+				FinalImages.pop(0)
 				count += 1
 			sleep(0.05)
 
 
+class myThread2(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+		None
+	def run(self):
+		# takes screenshots 2/s
+		global StopKey, ProvisionallyImages, WindowClassName
+		while StopKey:
+			tenthsecond = int(repr(int(round(time() * 10)))[-1])
+			if tenthsecond == 5 or tenthsecond == 0:
+				ProvisionallyImages.append(screenshot(WindowClassName))
+			if len(ProvisionallyImages) > 3:
+				ProvisionallyImages.pop(ProvisionallyImages[len(ProvisionallyImages)-1])
+
+
 def Photographer():
-	# gets keypress signal(Hotkey), generates and appends screenshot to global list
-	global StopKey, Hotkey, images, count, FileRaw, FileRaw, WindowClassName, state_left, state_right
+	print("Photographer")
+	# if Mouse is clicked Boolean = True
+	global StopKey, state_right, state_left, LeftMouseDown
+	Lock = True
+	while Lock:
+		state_left = win32api.GetKeyState(0x01)  # Left button down = 0 or 1. Button up = -127 or -128
+		state_right = win32api.GetKeyState(0x02)  # Right button down = 0 or 1. Button up = -127 or -128
+		if state_right == 1 or state_right == 0 and state_left == 0 or state_left == 0:
+			Lock = False
 	while StopKey:
-		if Hotkey:
-			images.append(screenshot(WindowClassName))
-			Hotkey = False
+		MouseState = win32api.GetKeyState(0x01)
+		if MouseState != state_left:  # Button state changed
+			FinalImages+=ProvisionallyImages
+			print("Mouse changed")
 
-		b = win32api.GetKeyState(0x02)
-
-		if b != state_right:  # Button state changed
-			state_right = b
-			i = 0
-			
-			if b < 0:
-				print('Right Button Pressed')
-				start = time()
-				while (b == state_right):
-					b = win32api.GetKeyState(0x02)
-					i+=1
-					images.append(screenshot(WindowClassName))
-					print('screenshot {}'.format(i))
-					sleep(0.25)
-					end = time()
-					if end-start > 4:
-						print("4 seconds delay")
-						break
-			else:
-				print('Right Button Released')
 
 FilenameFlow()
 
 KeyboardListener = keyboard.Listener(on_press=on_press)
 KeyboardListener.start()
 
-"""
-saveimages = myThread()
-saveimages.start()
-"""
+saver = myThread1()
+saver.start()
 
- 
+screenrecord = myThread2()
+screenrecord.start()
+
 Photographer()
