@@ -76,7 +76,6 @@ def screenshot(window_title=None, factorx=0, factory=0):
 			x, y = ClientToScreen(hwnd, (x, y))
 			x1, y1 = ClientToScreen(hwnd, (x1 - x, y1 - y))
 			# x,y,x1,y1 position and size
-			print(x1 * factorx, x1 * factory)
 			x += int((x1 * factorx / 2));
 			x1 -= int((x1 * factorx))
 			y += int((y1 * factory / 2));
@@ -142,7 +141,6 @@ class myThread2(Thread):
 			tenthsecond = int(repr(int(round(time() * 10)))[-1])
 			if tenthsecond == 5 or tenthsecond == 0:
 				ProvisionallyImages.append(screenshot(WindowClassName))
-				print(len(ProvisionallyImages))
 			if len(ProvisionallyImages) > 3:
 				ProvisionallyImages.pop(3)
 			sleep(0.001)
@@ -155,13 +153,13 @@ def Photographer():
 	while StopKey:
 		MouseState = win32api.GetKeyState(0x01)
 		if MouseState == -127 or MouseState == -128:  # Button state changed
-			moment = time() #wird jedesmal neu gemacht, zusammenhängende nicht neu machen
-			print(time() - moment)
-			if time() - moment > 0.2:
+			if time() - moment > 0.3:
 				FinalImages+=ProvisionallyImages
 				ProvisionallyImages.clear()
 				state_left = MouseState
 				print(str(repr(int(round(time() * 10)))[-1]))
+		else:
+			moment = time()
 		sleep(0.001)
 
 
