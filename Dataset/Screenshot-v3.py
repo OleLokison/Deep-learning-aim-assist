@@ -10,15 +10,15 @@ from os import walk
 import win32api
 
 Hotkey, StopKey = False, True
-FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
+FileRaw = r"D:\K14\Dataset\Raw\\"
 # FileRaw = r"C:\Users\8holz\Desktop\Dataset_prot\\"
-WindowClassName = 'C:\\Users\\8holz\\Documents\\GitHub\\K14 Githubg\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
-# WindowClassName = 'Rainbow Six'
+#WindowClassName = 'C:\\Users\\8holz\\Documents\\GitHub\\K14 Githubg\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
+# WindowClassName = 'Call of Duty®: Black Ops Cold War'
+WindowClassName = 'Rainbow Six'
 ProvisionallyImages = []
 FinalImages = []
 count = 0
 st = None
-
 
 """
 from win32gui import GetWindowText, EnumWindows
@@ -162,7 +162,7 @@ def Photographer():
 			moment = time()
 		sleep(0.001)
 
-
+sleep(10)
 FilenameFlow()
 
 KeyboardListener = keyboard.Listener(on_press=on_press)
@@ -175,3 +175,4 @@ screenrecord = myThread2()
 screenrecord.start()
 
 Photographer()
+
