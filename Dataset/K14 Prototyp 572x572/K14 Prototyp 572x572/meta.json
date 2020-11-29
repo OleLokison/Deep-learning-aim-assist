@@ -1,0 +1,14 @@
+{
+    "classes": [
+        {
+            "title": "Player",
+            "shape": "polygon",
+            "color": "#50FBB7",
+            "geometry_config": {},
+            "id": 2703473,
+            "hotkey": "P"
+        }
+    ],
+    "tags": [],
+    "projectType": "images"
+}
