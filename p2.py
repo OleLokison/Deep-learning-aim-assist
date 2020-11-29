@@ -10,6 +10,14 @@ DATADIR0 = r"D:\K14\Dataset\K14 Prototyp 572x572\K14 Prototyp 572x572\ds0\img"
 DATADIR1 = r"D:\K14\Dataset\K14 Prototyp 572x572\K14 Prototyp 572x572\ds0\masks_machine"
 DATADIR2 = r"D:\K14\Dataset\K14 Prototyp 572x572\Prep.pickle"
 
+def ImCompareGray(Im1, Im2, FigSize):
+    f = plt.figure(figsize=FigSize)
+    f.add_subplot(1,2, 1)
+    plt.imshow(Im1, cmap="gray")
+    f.add_subplot(1,2, 2)
+    plt.imshow(Im2, cmap="gray")
+    plt.show(block=True)
+
 def data_prep(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
 	#takes images by pah, converts to grayscale aray, shuffles, splits
 	Training_Images0 = []
@@ -41,7 +49,6 @@ def data_prep(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
 		"TestImages0":Test_Images0,
 		"TestImages1":Test_Images1
 		}
-
 
 dat = data_prep(DATADIR0, DATADIR1, 572, 572)
 f = open(DATADIR2, "wb")
