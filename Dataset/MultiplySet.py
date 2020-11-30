@@ -6,9 +6,9 @@ from PIL import Image as Pil_image, ImageTk as Pil_imageTk
 import pickle
 import random
 
-DATADIR0 = r"C:\Users\8holz\Documents\GitHub\K14 Githubg\Dataset\K14 Prototyp 572x572\K14 Prototyp 572x572\ds0\img"
-DATADIR1 = r"C:\Users\8holz\Documents\GitHub\K14 Githubg\Dataset\K14 Prototyp 572x572\K14 Prototyp 572x572\ds0\masks_machine"
-DATADIR2 = r"C:\Users\8holz\Documents\GitHub\K14 Githubg\Dataset\K14 Prototyp 572x572\Prep.pickle"
+DATADIR0 = r"D:\K14\Dataset\K14 Dataset-0\K14 Dataset-0\ds0\img"
+DATADIR1 = r"D:\K14\Dataset\K14 Dataset-0\K14 Dataset-0\ds0\masks_machine"
+DATADIR2 = r"D:\K14\Dataset\K14-Dataset-0-Multi.pickle"
 
 def ImCompareGray(Im1, Im2, FigSize=(10,10)):
     f = plt.figure(figsize=FigSize)
@@ -18,24 +18,22 @@ def ImCompareGray(Im1, Im2, FigSize=(10,10)):
     plt.imshow(Im2, cmap="gray")
     plt.show(block=True)
 
-def MultiplyImages(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
+def LoadArray(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
 	#takes images by pah, converts to grayscale aray, shuffles, splits
+	print("LoadArray is running")
 	Images0 = []
 	Images1 = []
 	for i in range(len(os.listdir(InputDir0))):
 		array = cv2.imread(os.path.join(InputDir0, os.listdir(InputDir0)[i]), cv2.IMREAD_GRAYSCALE)
 		Images0.append(array)
-		break
 	for i in range(len(os.listdir(InputDir1))):
 		array = cv2.imread(os.path.join(InputDir1, os.listdir(InputDir1)[i]), cv2.IMREAD_GRAYSCALE)
 		Images1.append(array)
-		break
-	return [
-		Images0, 
-		Images1,
-		]
+	print("Loading succesful\n")
+	return [Images0, Images1]
 
 def MultImg(Images0, Images1, Multiplications, ShapeTuple):
+	print("MultImg is running")
 	TestImg = random.choice(Images0), random.choice(Images1)
 	if (ShapeTuple[0] > TestImg[0].shape[0] or 
 		ShapeTuple[0] > TestImg[1].shape[0] or 
@@ -50,6 +48,7 @@ def MultImg(Images0, Images1, Multiplications, ShapeTuple):
 		"xmax":TestImg[0].shape[0]-ShapeTuple[0], 
 		"ymax":TestImg[0].shape[1]-ShapeTuple[1]}
 	for k in range(len(Images1)):
+		print("Image: "+str(k)+" out of: "+str(len(Images1)))
 		rows,cols = Images1[k].shape
 		for i in range(rows):
 			for j in range(cols):
@@ -66,17 +65,50 @@ def MultImg(Images0, Images1, Multiplications, ShapeTuple):
 				maxx = TestImg[0].shape[0]-ShapeTuple[0]
 			if maxy > TestImg[0].shape[1]-ShapeTuple[1]:
 				maxy = TestImg[0].shape[1]-ShapeTuple[1]
-			x = random.randrange(minx, maxx)
-			y = random.randrange(miny, maxy)
+			try:
+				x = random.randrange(minx, maxx)
+				y = random.randrange(miny, maxy)
+			except ValueError:
+				print("Value Error")
+				x = random.randrange(minx, maxx+1)
+				y = random.randrange(miny, maxy+1)
 			NewImage1 = (Images1[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
 			NewImage0 = (Images0[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
 			NewImages1.append(NewImage1)
 			NewImages0.append(NewImage0)
+	print("Multiplying succesful")
 	return [NewImages0, NewImages1]
 
+def DataPrep(InputDat0, InputDat1, ImWidth, ImHeight, TestFraction=0.25):
+	#takes images by pah, converts to grayscale aray, shuffles, splits
+	Training_Images0 = InputDat0
+	Training_Images1 = InputDat1
+	Test_Images0 = []
+	Test_Images1 = []
+	c = list(zip(Training_Images0, Training_Images1))
+	random.shuffle(c)
+	Training_Images0, Training_Images1 = zip(*c)
+	Training_Images0, Training_Images1 = list(Training_Images0), list(Training_Images1)
+	for i in range(int(len(Training_Images0)*TestFraction)):
+		Test_Images0.append(Training_Images0[i])
+		Training_Images0.pop(i)
+		Test_Images1.append(Training_Images1[i])
+		Training_Images1.pop(i)
+	Training_Images0 = np.array(Training_Images0).reshape(-1, ImWidth, ImHeight, 1)
+	Training_Images1 = np.array(Training_Images1).reshape(-1, ImWidth, ImHeight, 1)
+	Test_Images0 = np.array(Test_Images0).reshape(-1, ImWidth, ImHeight, 1)
+	Test_Images1 = np.array(Test_Images1).reshape(-1, ImWidth, ImHeight, 1)
+	return {
+		"TrainImages0":Training_Images0, 
+		"TrainImages1":Training_Images1,
+		"TestImages0":Test_Images0,
+		"TestImages1":Test_Images1
+		}
 
-dat = MultiplyImages(DATADIR0, DATADIR1, 572, 572)
-dat1 = MultImg(dat[0], dat[1], 1, (100, 100))
-print(dat1)
-for i in range(1):
-	ImCompareGray(dat1[0][i], dat1[1][i])
+
+dat = LoadArray(DATADIR0, DATADIR1, 2560, 1440)
+dat = MultImg(dat[0], dat[1], 10, (512, 512))
+dat = DataPrep(dat[0], dat[1], 512, 512)
+
+f = open(DATADIR2, "wb")
+pickle.dump(dat, f)
