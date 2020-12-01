@@ -1,6 +1,6 @@
 import pickle
 from matplotlib import pyplot as plt
 import random
-a = (1, 2)
+a = {1:1}
 
-print(a[1])
+print(len(a))
