@@ -20,6 +20,6 @@ def ImCompareGray(Im1, Im2, FigSize=(10,10)):
 
 dat = pickle.load(open(DATADIR2, "rb"))
 
-for i in range(15):
+for i in range(50):
 	ImCompareGray(dat["TestImages0"][i], dat["TestImages1"][i])
 

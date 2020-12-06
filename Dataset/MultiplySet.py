@@ -8,7 +8,7 @@ import random
 
 DATADIR0 = r"D:\K14\Dataset\K14 Dataset-full\K14 Dataset-0\ds0\img"
 DATADIR1 = r"D:\K14\Dataset\K14 Dataset-full\K14 Dataset-0\ds0\masks_machine"
-DATADIR2 = r"D:\K14\Dataset\K14-Dataset-0-Multi.pickle"
+DATADIR2 = r"D:\K14\Dataset\K14-Dataset-0-Multi-V1.pickle"
 
 def ImCompareGray(Im1, Im2, FigSize=(10,10)):
     f = plt.figure(figsize=FigSize)
@@ -21,6 +21,7 @@ def ImCompareGray(Im1, Im2, FigSize=(10,10)):
 
 def LoadImg(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
 	#takes images by pah, converts to grayscale aray, shuffles, splits
+	print("LoadImg is Running")
 	Images0 = []
 	Images1 = []
 	for i in range(len(os.listdir(InputDir0))):
@@ -29,6 +30,7 @@ def LoadImg(InputDir0, InputDir1, ImWidth, ImHeight, TestFraction=0.25):
 	for i in range(len(os.listdir(InputDir1))):
 		array = cv2.imread(os.path.join(InputDir1, os.listdir(InputDir1)[i]), cv2.IMREAD_GRAYSCALE)
 		Images1.append(array)
+	print("LoadImg has finished, yeepa\n")
 	return [
 		Images0, 
 		Images1,
@@ -87,18 +89,14 @@ def MultImg(Images0, Images1, Multiplications, ShapeTuple):
 					maxx = TestImg[0].shape[0]-ShapeTuple[0]
 				if maxy > TestImg[0].shape[1]-ShapeTuple[1]:
 					maxy = TestImg[0].shape[1]-ShapeTuple[1]
+				x = random.randrange(minx, maxx)
+				y = random.randrange(miny, maxy)
+				NewImage1 = (Images1[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
+				NewImage0 = (Images0[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
+				NewImages1.append(NewImage1)
+				NewImages0.append(NewImage0)
 			else:
 				print("No White Pixels found :(")
-				minx = 0
-				miny = 0
-				maxx = TestImg[0].shape[0]-ShapeTuple[0]
-				maxy = TestImg[0].shape[1]-ShapeTuple[1]
-			x = random.randrange(minx, maxx)
-			y = random.randrange(miny, maxy)
-			NewImage1 = (Images1[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
-			NewImage0 = (Images0[k][x:x+ShapeTuple[0], y:y+ShapeTuple[1]])
-			NewImages1.append(NewImage1)
-			NewImages0.append(NewImage0)
 		PosPixels = {}
 	print("MultImg has finished\n")
 	return [NewImages0, NewImages1]
@@ -135,7 +133,8 @@ def DataPrep(InputData0, InputData1, ImWidth, ImHeight, TestFraction=0.25):
 dat = LoadImg(DATADIR0, DATADIR1, 2560, 1440)
 dat1 = MultImg(dat[0], dat[1], 5, (512, 512))
 dat2 = DataPrep(dat1[0], dat1[1], 512, 512)
-
+"""
 print("pickle says hello")
 pickle.dump(dat2, open(DATADIR2, "wb"))
 print("Le finish\n")
+"""
