@@ -34,6 +34,7 @@ class myThread(Thread):
 			global PredImage
 			print(PredImage)
 			root.after(1000, refresh)
+
 		refresh()
 		root.mainloop()
 
