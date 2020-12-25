@@ -6,9 +6,9 @@ from PIL import Image as Pil_image, ImageTk as Pil_imageTk
 import pickle
 import random
 
-DATADIR0 = r"D:\K14\Dataset\K14 Dataset-full\K14 Dataset-0\ds0\img"
-DATADIR1 = r"D:\K14\Dataset\K14 Dataset-full\K14 Dataset-0\ds0\masks_machine"
-DATADIR2 = r"D:\K14\Dataset\K14-Dataset-0-Multi-V1.pickle"
+DATADIR0 = r"D:\K14\Dataset\K14-Dataset-1\K14 Dataset extencion 0\ds0\img"
+DATADIR1 = r"D:\K14\Dataset\K14-Dataset-1\K14 Dataset extencion 0\ds0\masks_machine"
+DATADIR2 = r"D:\K14\Dataset\K14-Dataset-1.pickle"
 
 def ImCompareGray(Im1, Im2, FigSize=(10,10)):
     f = plt.figure(figsize=FigSize)
@@ -101,6 +101,7 @@ def MultImg(Images0, Images1, Multiplications, ShapeTuple):
 	print("MultImg has finished\n")
 	return [NewImages0, NewImages1]
 
+
 def DataPrep(InputData0, InputData1, ImWidth, ImHeight, TestFraction=0.25):
 	#takes images by pah, converts to grayscale aray, shuffles, splits
 	print("DataPrep has began its journy")
@@ -133,8 +134,7 @@ def DataPrep(InputData0, InputData1, ImWidth, ImHeight, TestFraction=0.25):
 dat = LoadImg(DATADIR0, DATADIR1, 2560, 1440)
 dat1 = MultImg(dat[0], dat[1], 5, (512, 512))
 dat2 = DataPrep(dat1[0], dat1[1], 512, 512)
-"""
+
 print("pickle says hello")
 pickle.dump(dat2, open(DATADIR2, "wb"))
 print("Le finish\n")
-"""

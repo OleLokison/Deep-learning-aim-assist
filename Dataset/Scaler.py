@@ -10,8 +10,8 @@ from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScr
 from os import walk
 from tkinter import *
 
-FilePath = r"D:\K14\Dataset\Prototyp\\"
-FilePathScaled = r"D:\K14\Dataset\572x572\\"
+FilePath = r"D:\K14\Dataset\TestImages\\"
+FilePathScaled = r"D:\K14\Dataset\TestImagesScaled\\"
 count=0
 
 def FilenameFlow():
@@ -70,7 +70,7 @@ class Window(Frame):
         img.image = render
         img.pack()
 
-"""
+
 FilenameFlow()
 AllNames=FileNameFinder()
 for name in AllNames:
@@ -80,7 +80,7 @@ for name in AllNames:
 					str(count)+
 					".png")
 	count+=1
-"""
+
 
 """
 root = Tk()

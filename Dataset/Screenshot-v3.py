@@ -15,6 +15,7 @@ FileRaw = r"D:\K14\Dataset\Raw\\"
 #WindowClassName = 'C:\\Users\\8holz\\Documents\\GitHub\\K14 Githubg\\Dataset\\Screenshot-v3.py - Sublime Text (UNREGISTERED)'
 # WindowClassName = 'Call of Duty®: Black Ops Cold War'
 WindowClassName = 'Rainbow Six'
+#WindowClassName = 'tk'
 ProvisionallyImages = []
 FinalImages = []
 count = 0

@@ -1,31 +1,43 @@
+from time import time, sleep
+from threading import Thread
+from time import time, sleep, gmtime, strftime
+# from ctypes import Structure, windll, c_uint, sizeof, byref
 from win32gui import FindWindow, SetForegroundWindow, GetClientRect, ClientToScreen
-import pyautogui
-from time import sleep
+from os import walk
+import win32api
+import tkinter as tk 
+import random
+import pickle
 
-WindowClassName = 'Rainbow Six'
+PredImage=None
+DATADIR2 = r"D:\K14\Dataset\K14-Dataset-0-Multi-V1.pickle"
 
-def screenshot(window_title=None, factorx=0, factory=0):
-	if window_title:
-		hwnd = FindWindow(None, window_title)
-		if hwnd:
-			SetForegroundWindow(hwnd)
-			x, y, x1, y1 = GetClientRect(hwnd)
-			x, y = ClientToScreen(hwnd, (x, y))
-			x1, y1 = ClientToScreen(hwnd, (x1 - x, y1 - y))
-			# x,y,x1,y1 position and size
-			x += int((x1 * factorx / 2));
-			x1 -= int((x1 * factorx))
-			y += int((y1 * factory / 2));
-			y1 -= int((y1 * factory))
-			im = pyautogui.screenshot(region=(x, y, x1, y1))
-			return im
-		else:
-			print('Window not found!')
-	else:
-		im = pyautogui.screenshot()
-		return im
-sleep(10)
+def Prep(tim, pause):
+	global PwwwwwwwwedImage
+	t1 = time()
+	#Images = pickle.load(open(DATADIR2), "rb")["TestImages0"]
+	Images = [1,2,3,4,5,6,7,8,9]
+	while (time()-t1<=tim):
+		PredImage = random.choice(Images)
+		sleep(pause)
+		#print(PredImage)
 
-while True:
-    screenshot(WindowClassName)
-    sleep(0.1)
+class myThread(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+		None
+	def run(self):
+		# saves the images in the global list
+		root = tk.Tk()
+
+		def refresh():
+			global PredImage
+			print(PredImage)
+			root.after(1000, refresh)
+
+		refresh()
+		root.mainloop()
+
+inst = myThread()
+inst.start()
+Prep(5, 0.5)
