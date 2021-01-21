@@ -1,0 +1,10 @@
+11.01.2021:
+
+*Aim Assist ist sehr ruckelig, soll flüssiger werden. Spline.....
+
+*Gewisse fehler sind einfach erkennbar, mehrere grosse anpassungen sind fehler (In himmel schauen)
+
+*Genauigkeit ist scheisse, verluste in der Infokette finden, z.B. Weisseblock, MouseControl
+---------------------
+MouseControl macht 0.5 des Weges, IO wenn grosse Distanz aber nicht bei kleiner, (first check)
+komplett neuer built, soll flüssiger laufen

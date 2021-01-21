@@ -1,111 +1,79 @@
-import pyautogui as py
-from time import sleep, time
+import os
+import pickle
+from threading import Thread
+import time
+from matplotlib import pyplot as plt
+from ctypes import windll
+from math import ceil, floor
+
+StopKey = True
+
+distx =0
+disty =0
+strength =1
+Exceptions =[]
+MaxIterations =3
+
+def MouseControlV3(distx, disty, strength=1, Exceptions=[], MaxIterations=6):
+    #32 directions, 512 distances, 1 Iteration = 0.015
+    x = distx*strength
+    y = disty*strength
+    print(x,y)
+    if x not in Exceptions or y not in Exceptions:
+        if min(x,y)<=1:
+            windll.user32.mouse_event(0x0001, int(x), int(y), 0, 0)
+        else:
+            if min(x,y)>MaxIterations:
+                Iterations = 6
+            else:
+                Iterations=ceil(min(x,y))
+            x1 = floor(x/(Iterations-1))
+            y1 = floor(y/(Iterations-1))
+            for i in range(Iterations-1):
+                windll.user32.mouse_event(0x0001, x1, y1, 0, 0)
+                time.sleep(0.005)
+            windll.user32.mouse_event(0x0001, int(x)-(x1*Iterations-1), int(y)-(y1*Iterations-1), 0, 0)
+
+class MouseControlV4(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+		None
+	def run(self):
+	    #32 directions, 512 distances, 1 Iteration = 0.015
+		global distx, disty, strength, Exceptions, MaxIterations
+		Ldistx, Ldisty = distx, disty
+		while StopKey:
+			if Ldistx != distx or Ldisty != disty:
+				t = time.time()
+				Ldistx = distx
+				Ldisty = disty
+				Lstrength = strength
+				LExceptions = Exceptions
+				LMaxIterations = MaxIterations
+				x = distx*strength
+				y = disty*strength
+				print(x,y)
+				if x not in Exceptions or y not in Exceptions:
+					if min(x,y)<=1:
+						windll.user32.mouse_event(0x0001, int(x), int(y), 0, 0)
+					else:
+						if min(x,y)>MaxIterations:
+							Iterations = 6
+						else:
+							Iterations=ceil(min(x,y))
+						x1 = floor(x/(Iterations-1))
+						y1 = floor(y/(Iterations-1))
+						for i in range(Iterations-1):
+							windll.user32.mouse_event(0x0001, x1, y1, 0, 0)
+							time.sleep(0.005)
+						windll.user32.mouse_event(0x0001, int(x)-(x1*Iterations-1), int(y)-(y1*Iterations-1), 0, 0)
+				print(time.time()-t)
 
 
-filepath0 = r"C:\Users\8holz\Desktop\Test\runningicon.png"
-filepath1 = r"C:\Users\8holz\Desktop\Test\Restart1.png"
-filepath2 = r"C:\Users\8holz\Desktop\Test\Restart2.png"
-filepath3 = r"C:\Users\8holz\Desktop\Test\Restart3.png"
-filepath4 = r"C:\Users\8holz\Desktop\Test\blue.png"
-filepath5 = r"C:\Users\8holz\Desktop\Test\ok0.png"
-filepath6 = r"C:\Users\8holz\Desktop\Test\ok1.png"
-Runtime = 50000
-Count=0
-Count1=3600
-
-def RunAll():
-	py.keyDown('ctrl')
-	py.keyDown('alt')
-	py.press('p')
-	py.keyUp('ctrl')
-	py.keyUp('alt')
-
-t=time()
-while (time()-t<Runtime):
-	if py.locateOnScreen(filepath0)==None:
-		print("Notebook has finished: "+str(Count))
-		try:
-			PosRestart1 = py.locateOnScreen(filepath1)[0]+10, py.locateOnScreen(filepath1)[1]+10
-			py.moveTo(PosRestart1)
-			py.click()
-			sleep(5)
-		except:
-			try:
-				print("Restart Icon not found!skrrrr")
-				PosRestart4 = py.locateOnScreen(filepath4)[0], py.locateOnScreen(filepath4)[1]
-				py.moveTo(PosRestart4)
-				py.click()
-				sleep(1)
-			except:
-				print("we kinda lost-------------------")
-	else:
-		print("Still running")
-		sleep(60)
-	try:
-		PosRestart2 = py.locateOnScreen(filepath2)[0]+20, py.locateOnScreen(filepath2)[1]+15
-		py.moveTo(PosRestart2)
-		py.click()
-		sleep(5)
-		RunAll()
-		Count+=1
-	except:
-		try:
-			PosRestart3 = py.locateOnScreen(filepath3)[0]+20, py.locateOnScreen(filepath3)[1]+15
-			py.moveTo(PosRestart3)
-			py.click()
-			sleep(5)
-			RunAll()
-			Count+=1
-		except:
-			try:
-				PosRestart4 = py.locateOnScreen(filepath4)[0], py.locateOnScreen(filepath4)[1]
-				py.moveTo(PosRestart4)
-				py.click()
-				sleep(1)
-			except:
-				None
-	try:
-		PosRestart5 = py.locateOnScreen(filepath5)[0]+10, py.locateOnScreen(filepath5)[1]+10
-		py.moveTo(PosRestart5)
-		py.click()
-		sleep(5)
-		RunAll()
-		Count+=1
-	except:
-		try:
-			PosRestart6 = py.locateOnScreen(filepath6)[0]+10, py.locateOnScreen(filepath6)[1]+10
-			py.moveTo(PosRestart6)
-			py.click()
-			sleep(5)
-			RunAll()
-			Count+=1
-		except:
-			try:
-				PosRestart4 = py.locateOnScreen(filepath4)[0], py.locateOnScreen(filepath4)[1]
-				py.moveTo(PosRestart4)
-				py.click()
-				sleep(1)
-			except:
-				None
-	if (time()-t>Count1):
-		Count1=Count1+1800
-		try:
-			PosRestart1 = py.locateOnScreen(filepath1)[0]+10, py.locateOnScreen(filepath1)[1]+10
-			py.moveTo(PosRestart1)
-			py.click()
-			sleep(5)
-		except:
-			try:
-				print("Restart Icon not found!bra")
-				PosRestart4 = py.locateOnScreen(filepath4)[0], py.locateOnScreen(filepath4)[1]
-				py.moveTo(PosRestart4)
-				py.click()
-				sleep(1)
-			except:
-				try:
-					PosRestart1 = py.locateOnScreen(filepath1)[0]+10, py.locateOnScreen(filepath1)[1]+10
-					py.moveTo(PosRestart1)
-					py.click()
-					sleep(5)
-				except:
-					print("we kinda lost-------------------")
+it = MouseControlV4()
+it.start()
+for i in range(10):
+	distx, disty = distx+10, disty+10
+	print(distx, disty)
+	time.sleep(1)
+StopKey = False
