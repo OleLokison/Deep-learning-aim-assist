@@ -31,20 +31,18 @@ def ImCompareGray(Im1, Im2, FigSize=(10,10)):
     plt.imshow(Im2)
     plt.show(block=True)
 
-Template = pickle.load(open(r"D:\K14\Dataset\Predicitions.pickle", "rb"))[44]
+Template = pickle.load(open(r"D:\K14\Dataset\Predicitions.pickle", "rb"))[3]
 ims = pickle.load(open(r"D:\K14\Dataset\TestImages.pickle", "rb"))
 
-print(Template.shape)
-
-
 i = 8
+
+print(Template.shape)
 
 c = Coords(ims[1][i], Template)
 print(c)
 print(c[0]+256, c[1]+256)
 
 image = cv2.rectangle(ims[0][i], (c[0]+256, c[1]+256), (c[0]+256+2, c[1]+256+2), (0,255,0), 2)
-
 """
 cv2.imshow("image", image)
 cv2.waitKey()

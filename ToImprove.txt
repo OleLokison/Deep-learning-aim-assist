@@ -1,10 +1,7 @@
-11.01.2021:
+Goal: Plat 1
 
-*Aim Assist ist sehr ruckelig, soll flüssiger werden. Spline.....
+State now: Aimbot works, Mask is to inaccurate in many qays, MouseControl filters not effectivly and moves not smoothly
 
-*Gewisse fehler sind einfach erkennbar, mehrere grosse anpassungen sind fehler (In himmel schauen)
+Limiting factor: Filter
 
-*Genauigkeit ist scheisse, verluste in der Infokette finden, z.B. Weisseblock, MouseControl
----------------------
-MouseControl macht 0.5 des Weges, IO wenn grosse Distanz aber nicht bei kleiner, (first check)
-komplett neuer built, soll flüssiger laufen
+Goal for week: Filter surely bad moves completly and throttle maybe bad moves

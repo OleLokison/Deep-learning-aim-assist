@@ -1,5 +1,8 @@
-from time import time, sleep
-from ctypes import windll
-from math import sin, cos, radians, sqrt, floor
+import pickle
 
-print(min(1,2))
+import cv2
+
+datdir= r"D:\K14\Dataset\TestImages.pickle"
+
+a = pickle.load(open(datdir, "rb"))
+
