@@ -13,53 +13,50 @@ import win32api
 import time
 from threading import Thread
 
-class MouseControlV4(Thread):
-    def __init__(self):
-        Thread.__init__(self)
-        None
-    def run(self):
-        #32 directions, 512 distances, 1 Iteration = 0.015
-        global distx, disty, strength, Exceptions, MaxIterations
-        Ldistx, Ldisty = distx, disty
-        while StopKey:
-            if Ldistx != distx or Ldisty != disty:
-                t = time.time()
-                Ldistx = distx
-                Ldisty = disty
-                Lstrength = strength
-                LExceptions = Exceptions
-                LMaxIterations = MaxIterations
-                x = distx*strength
-                y = disty*strength
-                #print(x,y)
-                if x not in Exceptions or y not in Exceptions:
-                    if min(x,y)<=1:
-                        windll.user32.mouse_event(0x0001, int(x), int(y), 0, 0)
-                    else:
-                        if min(x,y)>MaxIterations:
-                            Iterations = 6
-                        else:
-                            Iterations=ceil(min(x,y))
-                        x1 = floor(x/(Iterations-1))
-                        y1 = floor(y/(Iterations-1))
-                        for i in range(Iterations-1):
-                            windll.user32.mouse_event(0x0001, x1, y1, 0, 0)
-                            #time.sleep(0.005)
-                        windll.user32.mouse_event(0x0001, int(x)-(x1*Iterations-1), int(y)-(y1*Iterations-1), 0, 0)
-                print(time.time()-t)
-            time.sleep(0.05)
+def Coords(Pred, small):
+	#cv2, Predicitons.pickle[2]=small
+	Pred = (255 - cv2.inRange(np.array(Pred * 255, dtype = np.uint8), 0, 160)).astype(np.float32)
+	small = np.array(small * 255, dtype = np.uint8).astype(np.float32)
+	result = cv2.matchTemplate(Pred, small, cv2.TM_SQDIFF_NORMED)
+	mn,_,mnLoc,_ = cv2.minMaxLoc(result)
+	MPx,MPy = mnLoc
+	#x and y may flipped
+	return (MPx+2-256, MPy+2-256)
+	#return (MPx, MPy)
 
-distx, disty = 0, 0
-strength = 0.1
-Exceptions = [-76.2, 33.3, -35.699999999999996, 77.0, -88.5, -127.0, -97.5, 32.5, -21.5, -68.0, -254]
-MaxIterations = 3
-StopKey = True
+def ImCompareGray(Im1, Im2, FigSize=(10,10)):
+    f = plt.figure(figsize=FigSize)
+    f.add_subplot(1,2, 1)
+    plt.imshow(Im1, "gray")
+    f.add_subplot(1,2, 2)
+    plt.imshow(Im2)
+    plt.show(block=True)
 
-inst1 = MouseControlV4()
-inst1.daemon = True
-inst1.start()
+class myThread(Thread):
+	def __init__(self):
+		Thread.__init__(self)
+		None
+	def run(self):
+		# saves the images in the global list
+		root = tk.Tk()
+		canvas1 = tk.Canvas(root, width = 512, height = 512)
+		canvas1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+		def recursive():
+			global ImageTesten0, ImageTesten1, PredImage0, PredImage1
+			ImageTesten1 = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(PredImage1, cv2.COLOR_BGR2RGB)))
+			#ImageTesten = tk.PhotoImage(file=DATADIR2+random.choice(os.listdir(DATADIR2)))
+			canvas1.create_image(0,0, anchor=tk.NW, image=ImageTesten1)
+			root.after(100, recursive)
+		recursive()
+		root.mainloop()
+
+Template = pickle.load(open(r"D:\K14\Dataset\Predicitions.pickle", "rb"))[10]
+ims = pickle.load(open(r"D:\K14\Dataset\TestImages.pickle", "rb"))
+Cache = pickle.load(open(r"C:\Users\8holz\Dokumente\GitHub\K14\Cache.pickle", "rb"))
 
 
-distx, disty = 10, 100
+i = 8
+ImageTesten0, ImageTesten1, PredImage0, PredImage1 = ims[1][i], ims[0][i], ims[1][i], ims[0][i]
 
-time.sleep(1)
+inst = myThread()
+inst.start()

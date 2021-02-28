@@ -1,7 +1,3 @@
-Goal: Plat 1
+1. Vielleicht ist performance schon gut wenn wir die MouseControl auf schnellere Bewegung stellen
 
-State now: Aimbot works, Mask is to inaccurate in many qays, MouseControl filters not effectivly and moves not smoothly
-
-Limiting factor: Filter
-
-Goal for week: Filter surely bad moves completly and throttle maybe bad moves
+2. Herausfinden ob Prediction auf dem Trainingsdataset auch so schlecht ist, um zu wissen ob wir mehr daten oder mehr Training brauchen
