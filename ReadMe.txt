@@ -1,3 +1,6 @@
+To the project look into the  PowerPoint
+----------------------------------------
+
 To make K14-2021... work:
 
 *You need tensorflow-gpu for python 3 and all the libraries you find in the Application Head.
