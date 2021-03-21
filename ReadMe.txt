@@ -1,4 +1,4 @@
-To the project look into the  PowerPoint
+Visit the PowerPoint to get project info.
 ----------------------------------------
 
 To make K14-2021... work:
