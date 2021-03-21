@@ -1,3 +1,0 @@
-1. Vielleicht ist performance schon gut wenn wir die MouseControl auf schnellere Bewegung stellen
-
-2. Herausfinden ob Prediction auf dem Trainingsdataset auch so schlecht ist, um zu wissen ob wir mehr daten oder mehr Training brauchen
