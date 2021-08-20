@@ -13,6 +13,6 @@ To make K14-2021... work:
 
 Tips:
 
-*If you get a "failed to convolute..." error, most likely you free RAM is too low.
+*If you get a "failed to convolute..." error, most likely your not having enough free RAM.
 *There is a bunch of other files I made while I was working on this, they are not sorted or jovial. 
  You can find them in the "Other" folder.
