@@ -15,7 +15,7 @@ To make K14-2021... work:
 
 *If you dont use a 2560x1440 screen you  have to adjust the Screenshot area in the Screenshot function.
 
-Tips:
+**Tips:**
 
 *If you get a "failed to convolute..." error, most likely your not having enough free RAM.
 
