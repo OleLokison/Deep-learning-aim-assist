@@ -1,4 +1,4 @@
-View the PowerPoint to get project info.
+View the Power Point to get project info.
 ----------------------------------------
 
 The file to run is named K14!
