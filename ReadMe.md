@@ -1,9 +1,7 @@
 View the Power Point to get project info.
 ----------------------------------------
 
-The file to run is named K14!
-
-To make K14-2021... work:
+**The file to run is named K14! To make K14-2021... work:**
 
 *You need tensorflow-gpu for python 3 and all the libraries you find in the Application Head.
 
